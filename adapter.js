@@ -393,6 +393,10 @@ if(KISSY.Node){
 
   BUI.loaderScript = loaderScript;
 
+  define('jquery', function(){
+    return window.jQuery;
+  });
+
   KISSY.config({
     packages: [{
       name:"bui",
