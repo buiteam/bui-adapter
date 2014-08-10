@@ -11,7 +11,7 @@
 
 window.BUI = window.BUI || {};
 
-window.define = window.define || function(name,depends,fun){
+window.define = window.define || function(name, depends, fun){
   if(KISSY.isFunction(depends)){
     fun = depends;
     depends = [];
@@ -25,7 +25,9 @@ window.define = window.define || function(name,depends,fun){
   }
 
   function callback(S){
-    return fun.call(window,require);
+    var exports = null;
+    var module = {};
+    return fun.call(window, require, exports, module) || exports || module.exports;
   }
   KISSY.add(name,callback,{requires : depends});
 };
@@ -104,8 +106,7 @@ var adapterCallback = function(){
       return null;
     }
 
-    var 
-      wrapNode = function(selector,content){
+    var wrapNode = function(selector,content){
         if(!(this instanceof wrapNode)){
           return new wrapNode(selector,content);
         }
@@ -365,6 +366,7 @@ var adapterCallback = function(){
       
       parseJSON : S.JSON.parse
     })
+
     return wrapNode;
   })();
 
@@ -376,6 +378,10 @@ define('bui/adapter', ['core'], adapterCallback);
 if(KISSY.Node){
   adapterCallback();
 }
+
+define('jquery', ['bui/adapter'], function(){
+  return window.jQuery;
+});
 
 ;(function() {
   //from seajs
@@ -392,10 +398,6 @@ if(KISSY.Node){
     loaderPath = src.substring(0, src.lastIndexOf('/'));
 
   BUI.loaderScript = loaderScript;
-
-  define('jquery', function(){
-    return window.jQuery;
-  });
 
   KISSY.config({
     packages: [{
