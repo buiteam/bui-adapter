@@ -25,9 +25,9 @@ window.define = window.define || function(name, depends, fun){
   }
 
   function callback(S){
-    var exports = null;
+    var exports = {};
     var module = {};
-    return fun.call(window, require, exports, module) || exports || module.exports;
+    return fun.call(window, require, exports, module) || (KISSY.isEmptyObject(exports) ? module.exports : exports);
   }
   KISSY.add(name,callback,{requires : depends});
 };
